@@ -16,9 +16,22 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <shiro-spring.version>1.4.1</shiro-spring.version>
   </properties>
 
   <dependencies>
+  		<dependency>
+	  		<groupId>cn.ekgc.dkscm</groupId>
+	  		<artifactId>dkscm-server</artifactId>
+	  		<version>${parent.version}</version>
+  		</dependency>
+  	<!-- 引入Shiro和Spring结合的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>org.apache.shiro</groupId>
+		    <artifactId>shiro-spring</artifactId>
+		    <version>${shiro-spring.version}</version>
+		</dependency>
+	<!-- 引入Shiro和Spring结合的依赖关系 [END] -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

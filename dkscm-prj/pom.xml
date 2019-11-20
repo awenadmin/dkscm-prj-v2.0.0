@@ -11,4 +11,89 @@
     <module>dkscm-shiro</module>
     <module>dkscm</module>
   </modules>
+  <properties>
+  		<spring.version>5.1.11.RELEASE</spring.version>
+    	<mysql-connector-java.version>8.0.18</mysql-connector-java.version>
+    	<mybatis.version>3.5.3</mybatis.version>
+    	<mybatis-spring.version>2.0.3</mybatis-spring.version>
+    	<druid.version>1.1.21</druid.version>
+    	<jackson-databind.version>2.10.1</jackson-databind.version>
+  </properties>
+  <dependencies>
+  	<dependency>
+  			<groupId>org.springframework</groupId>
+  			<artifactId>spring-webmvc</artifactId>
+  			<version>${spring.version}</version>
+  		</dependency>
+  		<!-- 引入Spring MVC所需要的依赖关系 [END] -->
+  		
+  		<!-- 引入Spring JDBC所需要的依赖关系 [BEGIN] -->
+  		<dependency>
+  			<groupId>org.springframework</groupId>
+  			<artifactId>spring-jdbc</artifactId>
+  			<version>${spring.version}</version>
+  		</dependency>
+  		<!-- 引入Spring JDBC所需要的依赖关系 [END] -->
+  		
+  		<!-- 引入MySQL连接驱动的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>${mysql-connector-java.version}</version>
+		</dependency>
+  		<!-- 引入MySQL连接驱动的依赖关系 [END] -->
+  		
+  		<!-- 引入Mybatis以及Mybatis和Spring结合的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>org.mybatis</groupId>
+		    <artifactId>mybatis</artifactId>
+		    <version>${mybatis.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.mybatis</groupId>
+		    <artifactId>mybatis-spring</artifactId>
+		    <version>${mybatis-spring.version}</version>
+		</dependency>
+  		<!-- 引入Mybatis以及Mybatis和Spring结合的依赖关系 [END] -->
+  		
+  		<!-- 引入Druid数据源的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		    <version>${druid.version}</version>
+		</dependency>
+  		<!-- 引入Druid数据源的依赖关系 [END] -->
+  		
+  		<!-- 引入Jackason进行json数据格式化的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson-databind.version}</version>
+		</dependency>
+  		<!-- 引入Jackason进行json数据格式化的依赖关系 [END] -->
+  		
+  		
+  		<!-- 引入JSTL的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>jstl</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
+  		<!-- 引入JSTL的依赖关系 [END] -->
+  		
+  		<!-- 引入Servlet和JSP的依赖关系 [BEGIN] -->
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>3.1.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet.jsp</groupId>
+		    <artifactId>javax.servlet.jsp-api</artifactId>
+		    <version>2.3.3</version>
+		    <scope>provided</scope>
+		</dependency>
+  		<!-- 引入Servlet和JSP的依赖关系 [END] -->
+  </dependencies>
 </project>
