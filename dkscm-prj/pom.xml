@@ -7,5 +7,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>dkscm-commons</module>
+    <module>dkscm-server</module>
   </modules>
 </project>
