@@ -17,7 +17,6 @@ public class User implements Serializable {
 	private Status status;
 	private Date createTime;
 	private Date updateTime;
-	
 	public Long getUserId() {
 		return userId;
 	}
@@ -90,4 +89,8 @@ public class User implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	
+	
+	
 }

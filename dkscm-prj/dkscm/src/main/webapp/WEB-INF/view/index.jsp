@@ -28,6 +28,28 @@
 				var iframe = "<iframe src='" + url + "' style='border: 0px; width: 100%; height: " + height + "px;' onscroll='true'></iframe>";
 				$("#content").html(iframe);
 			}
+			//显示弹出框
+			function showModal(url, width, height, titleHTML) {
+				var iframe = "<iframe src='" + url + "' style='border: 0px; width: 100%; height: 100%;' onscroll='true'></iframe>";
+				// 在展示弹出框的时候，需要将相应的信息设定到具体的位置
+				// 显示宽度
+				$("#myModalContent").css("width", width);
+				// 显示高度
+				$("#myModalBody").css("height", height);
+				// 标题
+				$("#myModalLabel").html(titleHTML);
+				// 主体
+				$("#myModalBody").html(iframe);
+				
+				$("#myModal").modal({
+					keyboard: false
+				});
+			}
+			
+			// 关闭窗口
+			function closeModal() {
+				$("#myModal").modal("hide");
+			}
 		</script>
 	</head>
 	<body class="hold-transition skin-blue sidebar-mini">
@@ -44,12 +66,12 @@
       				<div class="navbar-custom-menu">
         				<ul class="nav navbar-nav">
           					<li class="dropdown messages-menu">
-            					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            					<a href="#">
               						欢迎：${sessionScope.user.username }
             					</a>
           					</li>
           					<li>
-            					<a href="#" data-toggle="control-sidebar">
+            					<a href="user/logout">
             						退出系统
            						</a>
           					</li>
@@ -119,6 +141,18 @@
    				All rights reserved.
   			</footer>
   			<div class="control-sidebar-bg"></div>
+		</div>
+		<!-- 模态框  -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		    <div class="modal-dialog">
+		        <div id="myModalContent" class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                <h4 class="modal-title" id="myModalLabel"></h4>
+		            </div>
+		            <div class="modal-body" id="myModalBody"></div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal -->
 		</div>
 	</body>
 </html>

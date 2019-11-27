@@ -6,5 +6,12 @@ import java.util.Map;
 import cn.ekgc.dkscm.pojo.entity.Purchase;
 
 public interface PurchaseDao {
-	List<Purchase> findPurchaseListByPage(Map<String, Object> paramMap) throws Exception;
+	//根据查询条件获得采购列表
+
+	List<Purchase> findPurchaseListByQuery(Map<String, Object> paramMap) throws Exception;
+
+	void savePurchase(Purchase purchase) throws Exception;
+
+	void updatePurchase(Purchase purchase)throws Exception;
+
 }

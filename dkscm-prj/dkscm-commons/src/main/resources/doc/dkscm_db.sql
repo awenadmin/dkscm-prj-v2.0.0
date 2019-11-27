@@ -64,14 +64,14 @@ insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, stat
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(1, '系统用户', 'user/index', 'fa fa-users', 4, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(1, '角色管理', 'role/index', 'fa fa-hand-rock-o', 5, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(1, '我的信息', 'user/detail', 'fa fa-user', 6, 'ENABLE');
-insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '采购申请', 'purchase/APPLY/index', 'fa fa-hand-paper-o', 7, 'ENABLE');
+insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '采购申请', 'purchase/apply', 'fa fa-hand-paper-o', 7, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '采购审批', 'purchase/APPLY/index', 'fa fa-pencil-square-o', 8, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '物资购买', 'purchase/REVIEW/index', 'fa fa-cart-plus', 9, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '入库审批', 'purchase/PURCHASE/index', 'fa fa-pencil-square-o', 10, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '物资入库', 'purchase/STORE_REVIEW/index', 'fa fa-building-o', 11, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(2, '物资领取', 'purchase/STORE/index', 'fa fa-shopping-basket', 12, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(3, '已领取采购', 'purchase/RECEIVE/index', 'fa fa-sign-language', 13, 'ENABLE');
-insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(3, '已申请驳回采购', 'purchase/REIVEW_BACK/index', 'fa fa-reply', 14, 'ENABLE');
+insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(3, '已申请驳回采购', 'purchase/REVIEW_BACK/index', 'fa fa-reply', 14, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(3, '已入库驳回采购', 'purchase/STORE_BACK/index', 'fa fa-reply', 15, 'ENABLE');
 insert into sys_menu(parent_id, menu_text, menu_url, menu_icon, sort_order, status_code) values(3, '已撤回申请', 'purchase/APPLY_BACK/index', 'fa fa-reply', 15, 'ENABLE');
 
@@ -145,8 +145,8 @@ create table sys_user(
 	cellphone varchar(100) not null comment '手机号码',
 	password varchar(500) not null comment '登录密码',
 	role_id int(10) not null comment '角色',
-	id_card varchar(100) not null comment '身份证号码',
-	email varchar(500) not null comment '电子邮件',
+	id_card varchar(100) comment '身份证号码',
+	email varchar(500) comment '电子邮件',
 	user_photo varchar(500) comment '头像',
 	status_code varchar(100) not null comment '状态编码',
 	create_time timestamp not null default CURRENT_TIMESTAMP comment '创建时间',
@@ -186,7 +186,7 @@ create table sys_purchase(
 	store_reviewer_id int(10) comment '入库审批人',
 	store_review_remark varchar(500) comment '入库审批备注',
 	store_review_time timestamp comment '入库审批时间',
-	storeman int(10) comment '入库人',
+	storeman_id int(10) comment '入库人',
 	store_remark varchar(500) comment '入库备注',
 	store_time timestamp comment '入库时间',
 	receiver_id int(10) comment '领取人',

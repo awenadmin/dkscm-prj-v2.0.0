@@ -9,23 +9,57 @@
 			su.username,
 			su.cellphone,
 			su.password,
-			sr.role_id,
-			sr.role_name,
 			su.id_card,
 			su.email,
 			su.user_photo,
+			su.create_time,
+			sr.role_id,
+			sr.role_name,
 			ss.status_id,
-			ss.status_code
+			ss.status_code,
+			ss.status_text
 		FROM
 			sys_user su JOIN sys_role sr ON su.role_id=sr.role_id
 			JOIN sys_status ss ON su.status_code=ss.status_code
 		<trim suffixOverrides="and">
 			<where>
+				<if test="userId != null">su.user_id=#{userId} and</if>
 				<if test="cellphone != null">su.cellphone=#{cellphone} and</if>
 			</where>
 		</trim>
 	</select>
+	<update id="updateUser" parameterType="User">
+		UPDATE 
+			sys_user
+		SET
+			<trim suffixOverrides=",">
+				<if test="cellphone != null">cellphone=#{cellphone},</if>
+				<if test="password != null">password=#{password},</if>
+				<if test="idCard != null">id_card=#{idCard},</if>
+				<if test="role != null">role_id=#{role.roleId},</if>
+				<if test="email != null">email=#{email},</if>
+				<if test="userPhoto != null">user_photo=#{userPhoto},</if>
+				<if test="status != null">status_code=#{status.statusCode}</if>
+			</trim>
+		where
+			user_id=#{userId}
+	</update>
 	
+	<insert id="insertUser" parameterType="User">
+		insert into sys_user(
+			user_no, username, cellphone, password, role_id,
+			<if test="idCard != null">id_card,</if>
+			<if test="email != null">email,</if>
+			<if test="userPhoto != null">user_photo,</if>
+			status_code)
+		values(
+			#{userNo}, #{username}, #{cellphone}, #{password}, #{role.roleId},
+			<if test="idCard != null">#{idCard},</if>
+			<if test="email != null">#{email},</if>
+			<if test="userPhoto != null">#{userPhoto},</if>
+			#{status.statusCode})
+			
+	</insert>
 	<resultMap type="User" id="userMap">
 		<id property="userId" javaType="java.lang.Long" column="user_id"/>
 		<result property="userNo" javaType="java.lang.String" column="user_no"/>
@@ -35,6 +69,7 @@
 		<result property="idCard" javaType="java.lang.String" column="id_card"/>
 		<result property="email" javaType="java.lang.String" column="email"/>
 		<result property="userPhoto" javaType="java.lang.String" column="user_photo"/>
+		<result property="createTime" javaType="java.util.Date" column="create_time"/>
 		<association property="role" javaType="Role">
 			<id property="roleId" javaType="java.lang.Long" column="role_id"/>
 			<result property="roleName" javaType="java.lang.String" column="role_name"/>
@@ -42,6 +77,7 @@
 		<association property="status" javaType="Status">
 			<id property="statusId" javaType="java.lang.Long" column="status_id"/>
 			<result property="statusCode" javaType="java.lang.String" column="status_code"/>
+			<result property="statusText" javaType="java.lang.String" column="status_text"/>
 		</association>
-	</resultMap> 
+	</resultMap>
 </mapper>

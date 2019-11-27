@@ -6,8 +6,10 @@ import java.util.Map;
 import cn.ekgc.dkscm.pojo.entity.Menu;
 
 public interface MenuDao {
-	List<Menu> findListByQuery(Map<String, Object> params) throws Exception;
 
-	List<Menu> findMenuListByQuery(Map<String, Object> paramMap);
+
+	List<Menu> findListByQuery(Map<String, Object> params);
+
+	List<Menu> finMenuByQuery(Map<String, Object> query);
 
 }

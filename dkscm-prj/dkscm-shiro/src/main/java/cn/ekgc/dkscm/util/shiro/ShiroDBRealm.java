@@ -48,7 +48,6 @@ public class ShiroDBRealm extends AuthorizingRealm {
 					SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(
 							user.getCellphone(), user.getPassword(), getName());
 					session.setAttribute("user", user);
-					System.out.println(1123);
 					return info;
 				}
 			} catch (Exception e) {

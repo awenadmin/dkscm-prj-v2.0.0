@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ekgc.dao.RoleDao">
+	<select id="findRoleListByQuery" parameterType="java.util.Map" resultMap="roleMap">
+		SELECT 
+			role_name
+		FROM
+			sys_role
+		WHERE
+			<trim suffixOverrides=",">
+				<if test="roleId != null">role_id=#{roleId},</if>
+				<if test="statusCode!= null">status_code=#{statusCode}</if>
+			</trim>
+	</select>
+	<resultMap type="Role" id="roleMap">
+		<id column="roleId" javaType="java.lang.Long" property="role_id"/>
+		<result property="roleName" javaType="java.lang.String" column="role_name"/>
+	</resultMap>
+</mapper>

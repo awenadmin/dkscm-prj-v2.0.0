@@ -4,189 +4,197 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="../../static/css/bootstrap.min.css">
-  		<link rel="stylesheet" href="../../static/css/font-awesome.min.css">
-  		<link rel="stylesheet" href="../../static/DataTables/DataTables-1.10.20/css/jquery.dataTables.min.css">
-  		<script src="../../static/js/jquery-3.4.1.min.js"></script>
-		<script src="../../static/js/bootstrap.min.js"></script>
-		<script src="../../static/DataTables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  		<link rel="stylesheet" href="../static/css/font-awesome.min.css">
+  		<script src="../static/js/jquery-3.4.1.min.js"></script>
+		<script src="../static/js/bootstrap.min.js"></script>
+		<script src="../static/js/jquery.validate.min.js"></script>
+		<title></title>
 		<script type="text/javascript">
 			$(function() {
-				$("#mytable").DataTable({
-					// 关闭本地分页
-					paging: false,
-					// 关闭搜索框
-					searching: false,
-					// 关闭排序
-					ordering: false,
-					// 设定表格的数据是通过异步方式获得
-					serverSide: true,
-					// 获取表格地址
-					ajax: {
-						// 请求地址
-						url: "list",
-						// 请求方式
-						type: "post",
-						// 设定在请求列表的时候，所需要携带的请求参数
-						data: function(d) {
-							// 获得对应的设置信息
-							var tableSetings = $("#mytable").dataTable().fnSettings();
-							// 删除多余请求参数
-							for(var key in d) { 
-								if(key.indexOf("columns")==0||key.indexOf("order")==0||key.indexOf("search")==0){ 
-									//以columns开头的参数删除
-									delete d[key]; 
-								} 
+				$("#myForm").validate({
+					// 如果jQuery.Validation框架全部校验成功，则会同步提交数据，
+					// 为了能够阻止同步提交，则需要更改submit动作
+					submitHandler: function(form) {
+						// 该属性将会阻止数据的提交，而是转向调用本函数，因此可以在该函数中进行异步提交
+						// 使用jQuery的serialize函数将表单数据进行格式化
+						var formdata = $("#myForm").serialize();
+						// 获得所有数据之后，就可以进行异步提交
+						$.ajax({
+							url: "apply",
+							type: "post",
+							data: formdata,
+							dataType: "json",
+							success: function(data) {
+								// 对于data得到的就是true、false
+								if (data) {
+									alert("申请提交成功，请等待后续流程！");
+									// 关闭窗口，重定向到列表页面
+									parent.closeModal();
+									location.href="APPLY/index";
+								} else {
+									alert("申请提交失败，请稍后再试！");
+									parent.closeModal();
+								}
 							}
-							// 扩展请求时候的数据，重点在于pageNum和pageSize
-							var params = {
-									// 获得表格对象后，
-									// 系统当前页码_iDisplayStart，默认从0开始
-									"pageNum": tableSetings._iDisplayStart + 1,
-									// 每页显示数量
-									"pageSize": tableSetings._iDisplayLength
-							}
-							// 将新增的查询数据扩展到请求参数上
-							$.extend(d, params); //给d扩展参数
+						});
+					},
+					// 校验规则
+					rules: {
+						goodsName: {
+							required: true
 						},
-						// 设定回传的数据格式为JSON
-						dataType: "json",
-						// 过滤数据
-						dataFilter: function(data) {
-							data = JSON.parse(data);
-							var returnData = {};
-							returnData.draw = data.draw;
-							returnData.recordsTotal = data.totalSize;
-							returnData.recordsFiltered = data.totalSize;
-							returnData.data = data.list;
-							return JSON.stringify(returnData);
+						applyQuantity: {
+							required: true,
+							number: true,
+							min: 0.01
 						}
 					},
-					// 为表格的每一个字段设定具体的值
-					columnDefs: [{
-						targets: 0,
-						data: function (row, type, val, meta) {
-							// 在序号位置
-							var tableSetings = $("#mytable").dataTable().fnSettings();
-							var begin = tableSetings._iDisplayStart;
-							var size = tableSetings._iDisplayLength;
-							alert(begin * size + begin + 1);
-							return begin * size + begin + 1;
+					// 报错信息
+					messages: {
+						goodsName: {
+							required: "请填写物资名称"
+						},
+						applyQuantity: {
+							required: "请填写采购数量",
+							number: "请正确填写采购数量",
+							min: "采购数量至少为0.01"
 						}
-					}, {
-						targets: 1,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.purchaseNo;
-						}
-					}, {
-						targets: 2,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.goodsName;
-						}
-					}, {
-						targets: 3,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.goodsBand;
-						}
-					}, {
-						targets: 4,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.goodsType;
-						}
-					}, {
-						targets: 5,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.applyquantity + "&nbps;" + row.goodsUnit;
-						}
-					}, {
-						targets: 6,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.budget + "&nbps;元";
-						}
-					}, {
-						targets: 7,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return row.applyRemark;
-						}
-					}, {
-						targets: 8,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return "<span style='color:red;'></span>";
-						}
-					}, {
-						targets: 9,
-						data: function (row, type, val, meta) {
-							// 在序号位置，row就代表JSON中list所对应的一个位置的数据对象
-							return "<span style='color:red;'></span>";
-						}
-					}],
-					// 显示语言
-					language: {
-				        "sProcessing": "处理中...",
-				        "sLengthMenu": "显示 _MENU_ 项结果",
-				        "sZeroRecords": "没有匹配结果",
-				        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-				        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
-				        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-				        "sInfoPostFix": "",
-				        "sSearch": "搜索:",
-				        "sUrl": "",
-				        "sEmptyTable": "表中数据为空",
-				        "sLoadingRecords": "载入中...",
-				        "sInfoThousands": ",",
-				        "oPaginate": {
-				            "sFirst": "首页",
-				            "sPrevious": "上页",
-				            "sNext": "下页",
-				            "sLast": "末页"
-				        },
-				        "oAria": {
-				            "sSortAscending": ": 以升序排列此列",
-				            "sSortDescending": ": 以降序排列此列"
-				        }
-				    }
+					}
 				});
 			});
 		</script>
 	</head>
 	<body>
-		<div class="container" style="margin: 0px;">
-			<div class="row" style="padding-top: 10px;">
-				<div class="col-md-12">
-					<a href="#" class="btn btn-success">
-						<i class="fa fa-plus"></i>
-						申请采购
-					</a>
-				</div>
-			</div>
-			<div class="row" style="padding-top: 10px;">
-				<div class="col-md-12">
-					<table id="mytable" class="table table-bordered table-hover">
-						<thead>
+			<div class="row">
+				<div class="col-md-12" style="margin: 30px auto;">
+					<form id="myForm" role="form">
+						<table style="border-collapse: separate; border-spacing: 5px; margin: 0 auto;">
 							<tr>
-								<th>序号</th>
-								<th>申请编号</th>
-								<th>物资名称</th>
-								<th>品牌</th>
-								<th>型号</th>
-								<th>购买数量</th>
-								<th>预算</th>
-								<th>说明</th>
-								<th>状态</th>
-								<th>操作</th>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-gift"></i>
+									<label>物资名称：</label>
+								</td>
+								<td colspan="3" style="padding: 0px 5px;">
+									<input type="text" id="goodsName" name="goodsName" class="form-control" style="width: 300px;"/>
+								</td>
 							</tr>
-						</thead>
-					</table>
+							<tr>
+								<td></td>
+								<td colspan="3">
+									<label for="goodsName" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-shopping-bag"></i>
+									<label>品牌：</label>
+								</td>
+								<td colspan="3" style="padding: 0px 5px;">
+									<input type="text" id="goodsBand" name="goodsBand" class="form-control" style="width: 300px;"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="3">
+									<label for="goodsBand" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-shopping-basket"></i>
+									<label>型号：</label>
+								</td>
+								<td colspan="3" style="padding: 0px 5px;">
+									<input type="text" id="goodsType" name="goodsType" class="form-control" style="width: 300px;"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="3">
+									<label for="goodsType" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-cart-plus"></i>
+									<label>购买数量：</label>
+								</td>
+								<td style="padding: 0px 5px;">
+									<input type="text" id="applyQuantity" name="applyQuantity" class="form-control" style="width: 100px;"/>
+								</td>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-balance-scale"></i>
+									<label>计量单位：</label>
+								</td>
+								<td style="padding: 0px 5px;">
+									<input type="text" id="goodsUnit" name="goodsUnit" class="form-control" style="width: 70px;"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="text-align: right;">
+									<label for="applyQuantity" class="error" style="color: red;"></label>
+								</td>
+								<td colspan="2" style="text-align: right;">
+									<label for="goodsUnit" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-jpy"></i>
+									<label>总费用：</label>
+								</td>
+								<td colspan="3" style="padding: 0px 5px;">
+									<div class="input-group">
+										<input type="text" id="budget" name="budget" class="form-control" style="width: 250px;"/>
+	            						<span class="input-group-addon">&nbsp;元</span>
+            						</div>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="3">
+									<label for="budget" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<span style="color: red;">*</span>
+									<i class="fa fa-file-text-o"></i>
+									<label>购买说明：</label>
+								</td>
+								<td colspan="3" style="padding: 0px 5px;">
+									<input type="text" id="applyRemark" name="applyRemark" class="form-control" style="width: 300px;"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="3">
+									<label for="applyRemark" class="error" style="color: red;"></label>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" style="text-align: right;">
+									<button id="submitBtn" type="submit" class="btn btn-success">
+										<i class="fa fa-cart-arrow-down"></i>
+										申请购买
+									</button>
+								</td>
+							</tr>
+						</table>
+					</form>
 				</div>
 			</div>
-		</div>
+			<div class="row">
+				<div class="col-md-12" style="text-align: center;">
+					<h3 id="result"></h3>
+				</div>
+			</div>	
 	</body>
 </html>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ekgc.dkscm.dao.PurchaseDao">
+	<select id="findPurchaseListByQuery" parameterType="java.util.Map" resultMap="purchaseMap">
+		SELECT
+			sp.purchase_id,
+			sp.purchase_no,
+			sp.goods_name,
+			sp.goods_band,
+			sp.goods_type,
+			sp.apply_quantity,
+			sp.goods_unit,
+			sp.budget,
+			sp.apply_remark,
+			applicant.user_id applicant_id,
+			applicant.username applicant_name,
+			reviewer.user_id reviewer_id,
+			reviewer.username reviewer_name,
+			sp.review_remark,
+			purchaser.user_id purchaser_id,
+			purchaser.username purchaser_name,
+			sp.purchase_band,
+			sp.purchase_type,
+			sp.purchase_quantity,
+			sp.purchase_amount,
+			sp.purchase_remark,
+			sp.apply_time,
+			store_reviewer.user_id store_reviewer_id,
+			sp.store_review_remark,
+			storeman.user_id storeman_id,
+			storeman.username storeman_name,
+			sp.store_remark,
+			receiver.user_id receiver_id,
+			receiver.username receiver_name,
+			sp.receiver_remark,
+			ss.status_id,
+			ss.status_code,
+			ss.status_text
+		FROM
+			sys_purchase sp JOIN sys_user applicant ON sp.applicant_id=applicant.user_id
+			LEFT JOIN sys_user reviewer ON sp.reviewer_id=reviewer.user_id
+			LEFT JOIN sys_user purchaser ON sp.purchaser_id=purchaser.user_id
+			LEFT JOIN sys_user store_reviewer ON sp.store_reviewer_id=store_reviewer.user_id
+			LEFT JOIN sys_user storeman ON sp.storeman_id=storeman.user_id
+			LEFT JOIN sys_user receiver ON sp.receiver_id=receiver.user_id
+			JOIN sys_status ss ON sp.status_code=ss.status_code
+		<trim suffixOverrides="and">
+			<where>
+				<if test="statusCode != null">sp.status_code=#{statusCode} and</if>
+			</where>
+			<where>
+				<if test="purchaseId != null">sp.purchase_id=#{purchaseId} and</if>
+			</where>
+		</trim>
+		ORDER BY sp.apply_time DESC
+		<if test="begin != null">LIMIT #{begin}, #{size}</if>
+	</select>
+	<insert id="savePurchase" parameterType="Purchase">
+		insert into sys_purchase(
+			purchase_no, goods_name, goods_band, goods_type, 
+			apply_quantity, goods_unit, budget, 
+			<if test="applyRemark != null">apply_remark,</if> 
+			applicant_id, apply_time, status_code
+		) values(
+			#{purchaseNo}, #{goodsName}, #{goodsBand}, #{goodsType},
+			#{applyQuantity}, #{goodsUnit}, #{budget},
+			<if test="applyRemark != null">#{applyRemark},</if>
+			#{applicant.userId}, #{applyTime}, #{status.statusCode}
+		)
+	</insert>
+	<update id="updatePurchase" parameterType="Purchase">
+		update 
+			sys_purchase 
+		set
+			<trim suffixOverrides=",">
+				<if test="reviewRemark != null">review_remark=#{reviewRemark},</if>
+				<if test="reviewer != null">reviewer_id=#{reviewer.userId},</if>
+				<if test="reviewTime != null">review_time=#{reviewTime},</if>
+				<if test="purchaser != null">purchaser_id=#{purchaser.userId},</if>
+				<if test="purchaseRemark != null">purchase_remark=#{purchaseRemark},</if>
+				<if test="purchaser != null">purchaser_id=#{purchaser.userId},</if>
+				<if test="purchaseBand != null">purchase_band=#{purchaseBand},</if>
+				<if test="purchaseType != null">purchase_type=#{purchaseType},</if>
+				<if test="purchaseQuantity != null">purchase_quantity=#{purchaseQuantity},</if>
+				<if test="purchaseAmount != null">purchase_amount=#{purchaseAmount},</if>
+				<if test="storeReviewer != null">store_reviewer_id=#{storeReviewer.userId},</if>
+				<if test="storeReviewRemark != null">store_review_remark=#{storeReviewRemark},</if>
+				<if test="storeReviewTime != null">store_review_time=#{storeReviewTime},</if>
+				<if test="storeman != null">storeman_id=#{storeman.userId},</if>
+				<if test="storeRemark != null">store_remark=#{storeRemark},</if>
+				<if test="storeTime != null">store_time=#{storeTime},</if>
+				<if test="receiver != null">receiver_id=#{receiver.userId},</if>
+				<if test="receiveRemark != null">receiver_remark=#{receiveRemark},</if>
+				<if test="receiveTime != null">receive_time=#{receiveTime},</if>
+				<if test="status != null">status_code=#{status.statusCode}</if>
+			</trim>
+		where
+			purchase_id=#{purchaseId}
+	</update>
+	<resultMap type="Purchase" id="purchaseMap">
+		<id property="purchaseId" javaType="java.lang.Long" column="purchase_id"/>
+		<result property="purchaseNo" javaType="java.lang.String" column="purchase_no"/>
+		<result property="goodsName" javaType="java.lang.String" column="goods_name"/>
+		<result property="goodsBand" javaType="java.lang.String" column="goods_band"/>
+		<result property="goodsType" javaType="java.lang.String" column="goods_type"/>
+		<result property="applyQuantity" javaType="java.lang.Double" column="apply_quantity"/>
+		<result property="goodsUnit" javaType="java.lang.String" column="goods_unit"/>
+		<result property="budget" javaType="java.lang.Double" column="budget"/>
+		<result property="applyRemark" javaType="java.lang.String" column="apply_remark"/>
+		<result property="applyTime" javaType="java.util.Date" column="apply_time"/>
+		<result property="reviewRemark" javaType="java.lang.String" column="review_remark"/>
+		<result property="purchaseBand" javaType="java.lang.String" column="purchase_band"/>
+		<result property="purchaseType" javaType="java.lang.String" column="purchase_type"/>
+		<result property="purchaseQuantity" javaType="java.lang.Double" column="purchase_quantity"/>
+		<result property="purchaseAmount" javaType="java.lang.Double" column="purchase_amount"/>
+		<result property="purchaseRemark" javaType="java.lang.String" column="purchase_remark"/>
+		<result property="storeReviewRemark" javaType="java.lang.String" column="store_review_remark"/>
+		<result property="storeReviewTime" javaType="java.util.Date" column="store_review_time"/>
+		<result property="storeRemark" javaType="java.lang.String" column="store_remark"/>
+		<result property="storeTime" javaType="java.util.Date" column="store_time"/>
+		<result property="receiveRemark" javaType="java.lang.String" column="receiver_remark"/>
+		<result property="receiveTime" javaType="java.util.Date" column="receive_time"/>
+		<association property="applicant" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="applicant_id"/>
+			<result property="username" javaType="java.lang.String" column="applicant_name"/>
+		</association>
+		<association property="reviewer" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="reviewer_id"/>
+			<result property="username" javaType="java.lang.String" column="reviewer_name"/>
+		</association>
+		<association property="purchaser" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="purchaser_id"/>
+			<result property="username" javaType="java.lang.String" column="purchaser_name"/>
+		</association>
+		<association property="storeReviewer" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="store_reviewer_id"/>
+			<result property="username" javaType="java.lang.String" column="purchaser_name"/>
+		</association>
+		<association property="storeman" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="storeman_id"/>
+			<result property="username" javaType="java.lang.String" column="purchaser_name"/>
+		</association>
+		<association property="receiver" javaType="User">
+			<id property="userId" javaType="java.lang.Long" column="receiver_id"/>
+			<result property="username" javaType="java.lang.String" column="purchaser_name"/>
+		</association>
+		<association property="status" javaType="Status">
+			<id property="statusId" javaType="java.lang.Long" column="status_id"/>
+			<result property="statusCode" javaType="java.lang.String" column="status_code"/>
+			<result property="statusText" javaType="java.lang.String" column="status_text"/>
+		</association>
+	</resultMap>
+</mapper>
